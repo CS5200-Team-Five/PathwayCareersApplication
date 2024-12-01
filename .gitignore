@@ -1,0 +1,15 @@
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# macOS system files
+.DS_Store
+
+# Build directory
+build/
+
+
+# Ignore other temp files(if any)
+*.log
+*.tmp
