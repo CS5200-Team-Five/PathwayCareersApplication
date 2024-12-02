@@ -108,4 +108,31 @@ public class EmployerDao {
         }
         return employers;
     }
+    
+    public List<Employer> getEmployersByEmployerName(String employerName) throws SQLException {
+        List<Employer> employers = new ArrayList<>();
+        String selectEmployers = "SELECT * FROM Employer WHERE EMPLOYER_NAME=?";
+        
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(selectEmployers)) {
+
+            statement.setString(1, employerName);
+            ResultSet results = statement.executeQuery();
+
+            while (results.next()) {
+                Employer employer = new Employer(
+                    results.getInt("EMPLOYER_ID"),
+                    results.getString("EMPLOYER_NAME"),
+                    results.getString("EMPLOYER_ADDRESS_1"),
+                    results.getString("EMPLOYER_CITY"),
+                    results.getString("EMPLOYER_STATE_PROVINCE"),
+                    results.getString("EMPLOYER_POSTAL_CODE"),
+                    results.getString("EMPLOYER_COUNTRY"),
+                    results.getString("EMPLOYER_CASE_NUMBER")
+                );
+                employers.add(employer);
+            }
+        }
+        return employers;
+    }
 }
