@@ -43,7 +43,7 @@ public class SponsorAnalysis extends HttpServlet {
             List<CompanySponsorshipSummary> summaries = new ArrayList<>();
             for (Employer employer : employers) {
                 // Get all jobs for this employer
-                List<Job> jobs = jobDao.getJobsByEmployerId(employer.getEmployerId());
+                List<Job> jobs = jobDao.getJobsByEmployerName(employer.getEmployerName());
                 if (jobs.size() >= 1) { // Only consider employers with 5+ applications
                     CompanySponsorshipSummary summary = new CompanySponsorshipSummary(
                         employer.getEmployerName(),
