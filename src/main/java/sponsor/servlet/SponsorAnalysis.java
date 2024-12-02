@@ -19,7 +19,7 @@ public class SponsorAnalysis extends HttpServlet {
     protected PermDAO permDao;
     protected JobDao jobDao;
     protected CasesDao casesDao;
-    
+
     @Override
     public void init() throws ServletException {
         employerDao = EmployerDao.getInstance();
@@ -29,60 +29,28 @@ public class SponsorAnalysis extends HttpServlet {
         jobDao = JobDao.getInstance();
         casesDao = CasesDao.getInstance();
     }
-    
+
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         // Map for storing messages
         Map<String, String> messages = new HashMap<String, String>();
         req.setAttribute("messages", messages);
-        
+
         try {
-            // Get all employers first
-            List<Employer> employers = employerDao.getAllEmployers();
-            List<CompanySponsorshipSummary> summaries = new ArrayList<>();
-            for (Employer employer : employers) {
-                // Get all jobs for this employer
-                List<Job> jobs = jobDao.getJobsByEmployerId(employer.getEmployerId());
-                if (jobs.size() >= 1) { // Only consider employers with 5+ applications
-                    CompanySponsorshipSummary summary = new CompanySponsorshipSummary(
-                        employer.getEmployerName(),
-                        employer.getEmployerCity(),
-                        employer.getEmployerStateProvince()
-                    );
-                    
-                    // Process each job
-                    for (Job job : jobs) {
-                        String caseNumber = job.getCaseNumber();
-                        Sponsorship sponsorship = sponsorshipDao.getSponsorshipByCaseNumber(caseNumber);
-                        Cases caseDetails = casesDao.getCaseByNumber(caseNumber);
-                        
-                        if (sponsorship != null && caseDetails != null) {
-                            summary.addApplication(
-                                sponsorship.getSponsorshipType(),
-                                job.getJobTitle(),
-                                caseDetails.getCaseStatus(),
-                                1
-                            );
-                        }
-                    }
-                    summaries.add(summary);
-                }
-            }
-            
-            // Sort summaries by total applications
-            summaries.sort((a, b) -> b.getTotalApplications() - a.getTotalApplications());
+            List<Map<String, Object>> summaries = sponsorshipDao.analysis();
+
             req.setAttribute("sponsorshipSummaries", summaries);
             messages.put("success", "Successfully retrieved sponsorship analysis.");
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new IOException(e);
         }
-        
+
         req.getRequestDispatcher("/SponsorAnalysis.jsp").forward(req, resp);
     }
-    
+
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -99,15 +67,15 @@ class CompanySponsorshipSummary {
     private Map<String, Integer> jobRoles = new HashMap<>();
     private int totalApplications = 0;
     private int approvedApplications = 0;
-    
+
     public CompanySponsorshipSummary(String companyName, String city, String state) {
         this.companyName = companyName;
         this.city = city;
         this.state = state;
     }
-    
-    public void addApplication(String sponsorshipType, String jobTitle, 
-                             String status, int count) {
+
+    public void addApplication(String sponsorshipType, String jobTitle,
+                               String status, int count) {
         sponsorshipTypes.merge(sponsorshipType, count, Integer::sum);
         jobRoles.merge(jobTitle, count, Integer::sum);
         totalApplications += count;
@@ -115,15 +83,15 @@ class CompanySponsorshipSummary {
             approvedApplications += count;
         }
     }
-    
+
     // Getters
     public String getCompanyName() { return companyName; }
     public String getLocation() { return city + ", " + state; }
     public Map<String, Integer> getSponsorshipTypes() { return sponsorshipTypes; }
     public Map<String, Integer> getJobRoles() { return jobRoles; }
     public int getTotalApplications() { return totalApplications; }
-    public double getSuccessRate() { 
-        return totalApplications > 0 ? 
-            (double) approvedApplications / totalApplications * 100 : 0; 
+    public double getSuccessRate() {
+        return totalApplications > 0 ?
+                (double) approvedApplications / totalApplications * 100 : 0;
     }
 }
