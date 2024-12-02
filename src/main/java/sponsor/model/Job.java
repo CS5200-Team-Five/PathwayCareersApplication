@@ -10,9 +10,11 @@ public class Job {
     private double wageOfferFrom;
     private double wageOfferTo;
     private String wageOfferUnitOfPay;
+    private String employerName;
 
     public Job(String caseNumber, int employerId, String jobTitle, String pwSocCode, String pwSocTitle,
-               String pwSkillLevel, double pwWage, double wageOfferFrom, double wageOfferTo, String wageOfferUnitOfPay) {
+               String pwSkillLevel, double pwWage, double wageOfferFrom, double wageOfferTo, String wageOfferUnitOfPay, String employerName
+               ) {
         this.caseNumber = caseNumber;
         this.employerId = employerId;
         this.jobTitle = jobTitle;
@@ -23,6 +25,7 @@ public class Job {
         this.wageOfferFrom = wageOfferFrom;
         this.wageOfferTo = wageOfferTo;
         this.wageOfferUnitOfPay = wageOfferUnitOfPay;
+        this.employerName = employerName;
     }
 
     // Getters and Setters
@@ -36,4 +39,5 @@ public class Job {
     public double getWageOfferFrom() { return wageOfferFrom; }
     public double getWageOfferTo() { return wageOfferTo; }
     public String getWageOfferUnitOfPay() { return wageOfferUnitOfPay; }
+    public String getEmployerName() { return employerName; }
 }
