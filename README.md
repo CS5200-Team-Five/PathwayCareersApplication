@@ -8,7 +8,7 @@ Pathway Careers is a job search platform tailored for international students in 
 (1) User Management: Implemented Create, Read, Update, Delete (CRUD) operations for user profiles using Java Database Connectivity (JDBC) to interact with a MySQL database.
 ![1](https://github.com/user-attachments/assets/ffb08b64-4bbf-421d-b944-c4845f2ea08f)
 (2) Company Sponsorship Insights: Identify companies that frequently sponsor foreign workers, along with their success rates.
-
+![2](https://github.com/user-attachments/assets/f21a5109-60e8-4490-af9b-40fb839f751b)
 (3) Data Integration: Utilize U.S. Department of Labor Foreign Labor Certification Data to provide reliable information on companies’ labor condition applications related to work authorization support.
 
 2. Technical Implementation:
